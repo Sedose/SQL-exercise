@@ -47,54 +47,70 @@ INNER JOIN Boxes ON Warehouses.Code = Boxes.Warehouse;
 --3.8
 -- Select the warehouse codes, along with the number of boxes in each warehouse. 
 -- Optionally, take into account that some warehouses are empty (i.e., the box count should show up as zero, instead of omitting the warehouse from the result).
-select Warehouse, count(*) 
-from boxes 
-group by warehouse;
 
+--1st solution
+select warehouse, count(warehouse) as number_of_boxes
+from boxes
+group by warehouse
+union (
+    select code, '0'
+    from warehouses
+    where code not in (
+        select warehouse
+        from boxes
+    )
+);
+
+--2nd solution
+with warehouses_with_boxes (warehouse_code, number_of_boxes)
+as (
+    select warehouse, count(warehouse) as number_of_boxes
+    from boxes
+    group by warehouse
+)
+
+select warehouse_code, number_of_boxes
+from warehouses_with_boxes
+union (
+    select code, '0'
+    from warehouses
+    where code not in (
+        select warehouse_code
+        from warehouses_with_boxes
+    )
+);
 
 --3.9
 -- Select the codes of all warehouses that are saturated (a warehouse is saturated if the number of boxes in it is larger than the warehouse's capacity).
-select Code
-from warehouses join (select warehouse temp_a, count(*) temp_b from boxes group by warehouse) temp
-on (warehouses.code = temp.temp_a)
-where warehouses.Capacity<temp.temp_b;
 
+select warehouses.code
+from warehouses join (
+    select warehouse, count(warehouse) as boxes_count
+    from boxes
+    group by warehouse
+) as warehouse_to_boxes_count
+on warehouses.code = warehouse_to_boxes_count.warehouse
+where warehouses.capacity < warehouse_to_boxes_count.boxes_count;
 
-SELECT Code
-   FROM Warehouses
-   WHERE Capacity <
+select warehouses.code
+   from warehouses
+   where warehouses.capacity <
    (
-     SELECT COUNT(*)
-       FROM Boxes
-       WHERE Warehouse = Warehouses.Code
+     select count(boxes.code)
+       from boxes
+       where boxes.warehouse = warehouses.code
    );
-
-
 
 --3.10
 -- Select the codes of all the boxes located in Chicago.
 
-select Boxes.code 
-from boxes join Warehouses
-on boxes.warehouse = warehouses.code
-where warehouses.location = 'Chicago';
-
-/* Without subqueries */
- SELECT Boxes.Code
-   FROM Warehouses LEFT JOIN Boxes
-   ON Warehouses.Code = Boxes.Warehouse
-   WHERE Location = 'Chicago';
-
- /* With a subquery */
- SELECT Code
-   FROM Boxes
-   WHERE Warehouse IN
-   (
-     SELECT Code
-       FROM Warehouses
-       WHERE Location = 'Chicago'
-   );
-
+select boxes.code
+from boxes
+where warehouse in (
+    select code
+    from warehouses
+    where location = "Chicago"
+);
 
 --3.11
 -- Create a new warehouse in New York with a capacity for 3 boxes.

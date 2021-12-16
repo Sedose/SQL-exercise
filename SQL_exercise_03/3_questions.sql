@@ -15,7 +15,7 @@
 --3.12 Create a new box, with code "H5RT", containing "Papers" with a value of $200, and located in warehouse 2.
 --3.13 Reduce the value of all boxes by 15%.
 --3.14 Remove all boxes with a value lower than $100.
--- 3.15 Remove all boxes from saturated warehouses.
+-- 3.15 Remove all boxes from saturated warehouses. --- do this
 -- 3.16 Add Index for column "Warehouse" in table "boxes"
     -- !!!NOTE!!!: index should NOT be used on small tables in practice
 -- 3.17 Print all the existing indexes
