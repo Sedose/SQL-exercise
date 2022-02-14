@@ -11,7 +11,7 @@ CREATE TABLE Boxes (
     Code CHAR(4) NOT NULL,
     Contents VARCHAR(255) NOT NULL ,
     Value REAL NOT NULL ,
-    Warehouse INTEGER NOT NULL,
+    Warehouse INTEGER,
     PRIMARY KEY (Code),
     FOREIGN KEY (Warehouse) REFERENCES Warehouses(Code)
  ) ENGINE=INNODB;
@@ -33,3 +33,4 @@ CREATE TABLE Boxes (
  INSERT INTO Boxes(Code,Contents,Value,Warehouse) VALUES('P0H6','Scissors',125,1);
  INSERT INTO Boxes(Code,Contents,Value,Warehouse) VALUES('P2T6','Scissors',150,2);
  INSERT INTO Boxes(Code,Contents,Value,Warehouse) VALUES('TU55','Papers',90,5);
+ INSERT INTO Boxes(Code,Contents,Value,Warehouse) VALUES('Without warehouse','Without warehouse',90);

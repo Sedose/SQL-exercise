@@ -36,7 +36,7 @@ having avg(value)> 150;
 --3.7
 -- Select the code of each box, along with the name of the city the box is located in.
 select boxes.code, warehouses.location
-from boxes join warehouses
+from boxes left join warehouses
 on boxes.Warehouse = Warehouses.Code;
 
 SELECT Boxes.Code, Location
